@@ -1,0 +1,202 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSES 2026 | Research Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    :root { 
+        --deep-blue: #003366; 
+        --primary-blue: #006993;
+        --science-green: #7AC152;
+        --accent-lime: #BDD634;
+        --dark-bg: #000d1a; 
+    }
+    
+    body { 
+        background: radial-gradient(circle at center, #001a33 0%, #050a0f 100%);
+        color: white; 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+        margin: 0; 
+        padding: 20px; 
+        text-align: center;
+        min-height: 100vh;
+    }
+
+    h1 { 
+        margin-top: 10px; 
+        font-weight: 800; 
+        letter-spacing: -1px; 
+        color: white;
+        text-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+    
+    p { opacity: 0.8; margin-bottom: 25px; font-size: 1.1rem; color: #d1d9e0; }
+
+    .stats-grid { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+    .num { 
+        font-size: 3.5rem; 
+        font-weight: bold; 
+        color: var(--accent-lime); 
+        display: block; 
+        line-height: 1;
+        text-shadow: 0 0 20px rgba(189, 214, 52, 0.3);
+    }
+    .label { 
+        font-size: 0.85rem; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+        color: white; 
+        margin-top: 8px; 
+        display: block;
+        opacity: 0.9;
+    }
+
+    .btn-container { margin: 20px 0 35px 0; position: relative; z-index: 1000; }
+    .register-btn {
+        display: inline-block;
+        background: var(--deep-blue);
+        color: white;
+        padding: 16px 45px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        border: 2px solid var(--primary-blue);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .register-btn:hover { 
+        background: var(--primary-blue);
+        border-color: var(--accent-lime);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 105, 147, 0.4);
+    }
+
+    #map { 
+        height: 650px; 
+        width: 100%; 
+        max-width: 1200px; 
+        margin: auto; 
+        border-radius: 30px; 
+        border: 1px solid rgba(255,255,255,0.1); 
+        background: #0b0e14; 
+        box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+    }
+
+    .ping-marker {
+        background: var(--science-green);
+        border-radius: 50%;
+        animation: pulse-science 2s infinite;
+    }
+
+    @keyframes pulse-science {
+        0% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(122, 193, 82, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0); }
+    }
+
+    .leaflet-tooltip { 
+        background: var(--deep-blue) !important; 
+        color: white !important; 
+        border: 1px solid var(--primary-blue) !important; 
+        border-radius: 8px; 
+        padding: 10px; 
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    
+    .leaflet-control-attribution { 
+        background: rgba(0, 13, 26, 0.8) !important; 
+        color: #888 !important; 
+        border-radius: 10px 0 0 0;
+    }
+</style>
+</head>
+<body>
+
+    <h1>ICSES 2026: Where the World’s Research Meets</h1>
+    <p>Visualizing the global impact of scientific contributions.</p>
+    
+    <div class="stats-grid">
+        <div><span class="num" id="count-abstracts">0</span><span class="label">Total Abstract Submissions</span></div>
+        <div><span class="num" id="count-nations">0</span><span class="label">Countries Represented</span></div>
+    </div>
+
+    <div class="btn-container">
+        <a href="https://wcb2026.com/registration/" target="_blank" class="register-btn">Be Part Of It, Register Now →</a>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyTF3WaRtgKPHTVpnZwUPUyzMwq2_GkDu0-B0A1SvGiMZwGDGCCsu52XS-tf6Cc-LyF7VPWdkB7B43/pub?output=csv';
+
+        const map = L.map('map', { 
+            center: [15, 0], 
+            zoom: 1.8, 
+            minZoom: 1.5, 
+            maxZoom: 8, 
+            zoomControl: false, 
+            attributionControl: true 
+        });
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
+
+        const hubs = {
+            'Vancouver': [49.28, -123.12], 'Calgary': [51.04, -114.07], 'Edmonton': [53.54, -113.49], 'Saskatoon': [52.13, -106.67], 'Winnipeg': [49.89, -97.13], 'Toronto': [43.65, -79.38], 'Ottawa': [45.42, -75.69], 'Montreal': [45.50, -73.56], 'Quebec': [46.81, -71.20], 'Halifax': [44.64, -63.57], 'St. Johns': [47.56, -52.71], 'Victoria': [48.42, -123.36], 'Nanaimo': [49.16, -123.93], 'Lethbridge': [49.69, -112.84], 'Seattle': [47.60, -122.33], 'Portland': [45.51, -122.67], 'San Francisco': [37.77, -122.41], 'Los Angeles': [34.05, -118.24], 'San Diego': [32.71, -117.16], 'Phoenix': [33.44, -112.07], 'Salt Lake City': [40.76, -111.89], 'Denver': [39.73, -104.99], 'Houston': [29.76, -95.36], 'Dallas': [32.77, -96.79], 'Austin': [30.26, -97.74], 'Chicago': [41.87, -87.62], 'St. Louis': [38.62, -90.19], 'Atlanta': [33.74, -84.38], 'Miami': [25.76, -80.19], 'New York': [40.71, -74.00], 'Boston': [42.36, -71.05], 'Philadelphia': [39.95, -75.16], 'Washington': [38.90, -77.03], 'Pittsburgh': [40.44, -79.99], 'Baltimore': [39.29, -76.61], 'Detroit': [42.33, -83.04], 'Minneapolis': [44.97, -93.26], 'Omaha': [41.25, -95.93], 'Tucson': [32.22, -110.97], 'Nashville': [36.16, -86.78],
+            'London': [51.50, -0.12], 'Oxford': [51.75, -1.25], 'Cambridge': [52.20, 0.12], 'Manchester': [53.48, -2.24], 'Sheffield': [53.38, -1.47], 'Leeds': [53.80, -1.54], 'Edinburgh': [55.95, -3.18], 'Glasgow': [55.86, -4.25], 'Cardiff': [51.48, -3.17], 'Dublin': [53.34, -6.26], 'Galway': [53.27, -9.05], 'Paris': [48.85, 2.35], 'Lyon': [45.76, 4.83], 'Marseille': [43.29, 5.36], 'Dijon': [47.32, 5.04], 'Strasbourg': [48.57, 7.75], 'Berlin': [52.52, 13.40], 'Munich': [48.13, 11.58], 'Hamburg': [53.55, 9.99], 'Aachen': [50.77, 6.08], 'Stuttgart': [48.77, 9.18], 'Zurich': [47.37, 8.54], 'Bern': [46.94, 7.44], 'Geneva': [46.20, 6.14], 'Vienna': [48.20, 16.37], 'Graz': [47.07, 15.43], 'Brussels': [50.85, 4.35], 'Leuven': [50.87, 4.70], 'Ghent': [51.05, 3.73], 'Amsterdam': [52.36, 4.90], 'Rotterdam': [51.92, 4.47], 'Eindhoven': [51.44, 5.46], 'Delft': [52.01, 4.35], 'Madrid': [40.41, -3.70], 'Barcelona': [41.38, 2.17], 'Seville': [37.38, -5.98], 'Lisbon': [38.72, -9.13], 'Porto': [41.15, -8.62], 'Rome': [41.90, 12.49], 'Milan': [45.46, 9.18], 'Bologna': [44.49, 11.34], 'Padua': [45.40, 11.87], 'Oslo': [59.91, 10.75], 'Stockholm': [59.32, 18.06], 'Copenhagen': [55.67, 12.56], 'Aarhus': [56.15, 10.20], 'Warsaw': [52.22, 21.01], 'Krakow': [50.06, 19.94], 'Prague': [50.07, 14.43], 'Brno': [49.19, 16.60], 'Istanbul': [41.00, 28.97], 'Athens': [37.98, 23.72],
+            'Tokyo': [35.67, 139.65], 'Yokohama': [35.44, 139.63], 'Osaka': [34.69, 135.50], 'Kyoto': [35.01, 135.76], 'Fukuoka': [33.59, 130.40], 'Nagoya': [35.18, 136.90], 'Sendai': [38.26, 140.86], 'Seoul': [37.56, 126.97], 'Daegu': [35.87, 128.60], 'Incheon': [37.45, 126.70], 'Daejeon': [36.35, 127.38], 'Ulsan': [35.53, 129.31], 'Taipei': [25.03, 121.56], 'Tainan': [22.99, 120.22], 'Kaohsiung': [22.62, 120.30], 'Hong Kong': [22.31, 114.16], 'Beijing': [39.90, 116.40], 'Shanghai': [31.23, 121.47], 'Shenzhen': [22.54, 114.05], 'Wuhan': [30.59, 114.30], 'Chengdu': [30.57, 104.06], 'Singapore': [1.35, 103.81], 'Bangkok': [13.75, 100.50], 'Mumbai': [18.97, 72.87], 'New Delhi': [28.61, 77.20], 'Pune': [18.52, 73.85], 'Chennai': [13.08, 80.27], 'Sydney': [-33.86, 151.20], 'Melbourne': [-37.81, 144.96], 'Brisbane': [-27.47, 153.02], 'Adelaide': [-34.92, 138.60], 'Auckland': [-36.84, 174.76], 'Dunedin': [-45.87, 170.50],
+            'Riyadh': [24.71, 46.67], 'Abu Dhabi': [24.45, 54.37], 'Tehran': [35.68, 51.38], 'Tel Aviv': [32.08, 34.78], 'Haifa': [32.79, 34.98], 'Beirut': [33.89, 35.50], 'Cairo': [30.04, 31.23], 'Cape Town': [-33.92, 18.42], 'Johannesburg': [-26.20, 28.04], 'Durban': [-29.85, 31.02], 'São Paulo': [-23.55, -46.63], 'Brasília': [-15.79, -47.88], 'Rio de Janeiro': [-22.90, -43.17], 'Santiago': [-33.44, -70.66], 'Bogotá': [4.71, -74.07], 'Montevideo': [-34.90, -56.16], 'Buenos Aires': [-34.60, -58.38]
+        };
+
+        async function loadData() {
+            try {
+                const res = await fetch(csvUrl);
+                const csv = await res.text();
+                const lines = csv.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
+                
+                const countries = new Set();
+                const processedCities = new Set(); 
+                let submissions = 0;
+
+                lines.forEach(line => {
+                    const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                    let city = cols[0];
+                    const country = cols[1];
+
+                    if (!city && !country) return;
+                    submissions++;
+                    if (country) countries.add(country);
+
+                    if (city) {
+                        if (city.includes("Montréal")) city = "Montreal";
+                        if (city.includes("St Louis")) city = "St. Louis";
+                        if (city.includes("St Catharines")) city = "St. Catherines";
+                        if (city.includes("Zürich")) city = "Zurich";
+                        if (city.includes("Toyko")) city = "Tokyo";
+                    }
+
+                    if (hubs[city] && !processedCities.has(city)) {
+                        const icon = L.divIcon({ className: 'ping-marker', iconSize: [10, 10] });
+                        L.marker(hubs[city], { icon: icon }).addTo(map)
+                         .bindTooltip(`${city}, ${country}`, { direction: 'top', offset: [0, -5] });
+                        processedCities.add(city);
+                    }
+                });
+
+                document.getElementById('count-abstracts').innerText = submissions.toLocaleString();
+                document.getElementById('count-nations').innerText = countries.size;
+
+            } catch (e) { 
+                console.error("Error:", e); 
+            }
+        }
+        
+        loadData();
+    </script>
+</body>
+</html>
