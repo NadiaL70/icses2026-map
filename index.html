@@ -1,117 +1,118 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICSES 2026 | Research Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<style>
-    :root { 
-        --deep-blue: #003366; 
-        --primary-blue: #006993;
-        --science-green: #7AC152;
-        --accent-lime: #BDD634;
-        --dark-bg: #000d1a; 
-    }
-    
-    body { 
-        background: radial-gradient(circle at center, #001a33 0%, #050a0f 100%);
-        color: white; 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-        margin: 0; 
-        padding: 20px; 
-        text-align: center;
-        min-height: 100vh;
-    }
+    <style>
+        :root { 
+            --deep-blue: #003366; 
+            --primary-blue: #006993;
+            --science-green: #7AC152;
+            --accent-lime: #BDD634;
+            --dark-bg: #000d1a; 
+        }
+        
+        body { 
+            background: radial-gradient(circle at center, #001a33 0%, #050a0f 100%);
+            color: white; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            text-align: center;
+            min-height: 100vh;
+        }
 
-    h1 { 
-        margin-top: 10px; 
-        font-weight: 800; 
-        letter-spacing: -1px; 
-        color: white;
-        text-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
-    
-    p { opacity: 0.8; margin-bottom: 25px; font-size: 1.1rem; color: #d1d9e0; }
+        h1 { 
+            margin-top: 10px; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+            color: white;
+            text-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+        
+        p { opacity: 0.8; margin-bottom: 25px; font-size: 1.1rem; color: #d1d9e0; }
 
-    .stats-grid { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
-    .num { 
-        font-size: 3.5rem; 
-        font-weight: bold; 
-        color: var(--accent-lime); 
-        display: block; 
-        line-height: 1;
-        text-shadow: 0 0 20px rgba(189, 214, 52, 0.3);
-    }
-    .label { 
-        font-size: 0.85rem; 
-        text-transform: uppercase; 
-        letter-spacing: 2px; 
-        color: white; 
-        margin-top: 8px; 
-        display: block;
-        opacity: 0.9;
-    }
+        .stats-grid { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .num { 
+            font-size: 3.5rem; 
+            font-weight: bold; 
+            color: var(--accent-lime); 
+            display: block; 
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(189, 214, 52, 0.3);
+        }
+        .label { 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: white; 
+            margin-top: 8px; 
+            display: block;
+            opacity: 0.9;
+        }
 
-    .btn-container { margin: 20px 0 35px 0; position: relative; z-index: 1000; }
-    .register-btn {
-        display: inline-block;
-        background: var(--deep-blue);
-        color: white;
-        padding: 16px 45px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1.1rem;
-        border: 2px solid var(--primary-blue);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-    .register-btn:hover { 
-        background: var(--primary-blue);
-        border-color: var(--accent-lime);
-        transform: translateY(-3px);
-        box-shadow: 0 12px 30px rgba(0, 105, 147, 0.4);
-    }
+        .btn-container { margin: 20px 0 35px 0; position: relative; z-index: 1000; }
+        .register-btn {
+            display: inline-block;
+            background: var(--deep-blue);
+            color: white;
+            padding: 16px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: 2px solid var(--primary-blue);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .register-btn:hover { 
+            background: var(--primary-blue);
+            border-color: var(--accent-lime);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 105, 147, 0.4);
+        }
 
-    #map { 
-        height: 650px; 
-        width: 100%; 
-        max-width: 1200px; 
-        margin: auto; 
-        border-radius: 30px; 
-        border: 1px solid rgba(255,255,255,0.1); 
-        background: #0b0e14; 
-        box-shadow: 0 40px 80px rgba(0,0,0,0.7);
-    }
+        #map { 
+            height: 650px; 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: auto; 
+            border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            background: #0b0e14; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+        }
 
-    .ping-marker {
-        background: var(--science-green);
-        border-radius: 50%;
-        animation: pulse-science 2s infinite;
-    }
+        .ping-marker {
+            background: var(--science-green);
+            border-radius: 50%;
+            animation: pulse-science 2s infinite;
+        }
 
-    @keyframes pulse-science {
-        0% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(122, 193, 82, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0); }
-    }
+        @keyframes pulse-science {
+            0% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(122, 193, 82, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(122, 193, 82, 0); }
+        }
 
-    .leaflet-tooltip { 
-        background: var(--deep-blue) !important; 
-        color: white !important; 
-        border: 1px solid var(--primary-blue) !important; 
-        border-radius: 8px; 
-        padding: 10px; 
-        font-weight: 600;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    
-    .leaflet-control-attribution { 
-        background: rgba(0, 13, 26, 0.8) !important; 
-        color: #888 !important; 
-        border-radius: 10px 0 0 0;
-    }
-</style>
+        .leaflet-tooltip { 
+            background: var(--deep-blue) !important; 
+            color: white !important; 
+            border: 1px solid var(--primary-blue) !important; 
+            border-radius: 8px; 
+            padding: 10px; 
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        .leaflet-control-attribution { 
+            background: rgba(0, 13, 26, 0.8) !important; 
+            color: #888 !important; 
+            border-radius: 10px 0 0 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -156,30 +157,39 @@
         async function loadData() {
             try {
                 const res = await fetch(csvUrl);
+                if (!res.ok) throw new Error("Could not fetch CSV");
+                
                 const csv = await res.text();
-                const lines = csv.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
+                // Filter out empty lines and get all rows except header
+                const lines = csv.split(/\r?\n/).filter(line => line.trim() !== "");
+                const dataRows = lines.slice(1);
                 
                 const countries = new Set();
                 const processedCities = new Set(); 
                 let submissions = 0;
 
-                lines.forEach(line => {
-                    const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                dataRows.forEach(line => {
+                    // Regex helps handle commas inside quotes correctly
+                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
+                    
                     let city = cols[0];
                     const country = cols[1];
 
                     if (!city && !country) return;
+                    
                     submissions++;
                     if (country) countries.add(country);
 
+                    // Clean up special characters for matching
                     if (city) {
-                        if (city.includes("Montréal")) city = "Montreal";
-                        if (city.includes("St Louis")) city = "St. Louis";
-                        if (city.includes("St Catharines")) city = "St. Catherines";
-                        if (city.includes("Zürich")) city = "Zurich";
-                        if (city.includes("Toyko")) city = "Tokyo";
+                        city = city.replace("Montréal", "Montreal")
+                                   .replace("St Louis", "St. Louis")
+                                   .replace("St Catharines", "St. Catherines")
+                                   .replace("Zürich", "Zurich")
+                                   .replace("Toyko", "Tokyo");
                     }
 
+                    // Place marker if coordinates exist and city hasn't been pinged yet
                     if (hubs[city] && !processedCities.has(city)) {
                         const icon = L.divIcon({ className: 'ping-marker', iconSize: [10, 10] });
                         L.marker(hubs[city], { icon: icon }).addTo(map)
@@ -192,7 +202,7 @@
                 document.getElementById('count-nations').innerText = countries.size;
 
             } catch (e) { 
-                console.error("Error:", e); 
+                console.error("Error loading CSV data:", e); 
             }
         }
         
