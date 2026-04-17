@@ -12,178 +12,227 @@
             --brand-green: #67C18C;
             --brand-teal: #4BB3A6;
             --brand-red: #8C191B;
+
+            --bg-soft: #f5f4f2;
+            --bg-panel: #ffffff;
+            --text-muted: #6a6767;
+            --border-soft: rgba(35, 31, 32, 0.10);
+            --shadow-soft: 0 16px 40px rgba(35, 31, 32, 0.08);
         }
         
         body { 
-            background: radial-gradient(circle at center, #322e2f 0%, var(--brand-charcoal) 100%);
-            color: white; 
+            background: linear-gradient(180deg, #f7f5f2 0%, #f1efeb 100%);
+            color: var(--brand-charcoal); 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             margin: 0; 
-            padding: 20px; 
+            padding: 28px 20px 40px; 
             text-align: center;
             min-height: 100vh;
         }
 
-        h1 { 
-            margin-top: 10px; 
-            font-weight: 800; 
-            letter-spacing: -1px; 
-            color: white;
-            text-shadow: 0 0 15px rgba(255,255,255,0.1);
-        }
-        
-        p { 
-            opacity: 0.8; 
-            margin-bottom: 25px; 
-            font-size: 1.1rem; 
-            color: #d1d9e0; 
+        .page-wrap {
+            max-width: 1280px;
+            margin: 0 auto;
         }
 
-        .stats-grid { 
-            display: flex; 
-            justify-content: center; 
-            gap: 40px; 
-            margin-bottom: 30px; 
+        h1 { 
+            margin: 8px 0 10px; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+            color: var(--brand-charcoal);
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.05;
+        }
+        
+        p.subtitle {
+            opacity: 1;
+            margin: 0 auto 30px;
+            font-size: 1.08rem;
+            color: var(--text-muted);
+            max-width: 720px;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 0 auto 28px;
             flex-wrap: wrap;
+            max-width: 900px;
+        }
+
+        .stat-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 22px 28px;
+            min-width: 240px;
+            box-shadow: var(--shadow-soft);
         }
 
         .num { 
-            font-size: 3.5rem; 
-            font-weight: bold; 
+            font-size: 3rem; 
+            font-weight: 800; 
             color: var(--brand-green); 
             display: block; 
             line-height: 1;
-            text-shadow: 0 0 20px rgba(103, 193, 140, 0.3);
+            margin-bottom: 8px;
         }
 
         .label { 
-            font-size: 0.85rem; 
+            font-size: 0.8rem; 
             text-transform: uppercase; 
-            letter-spacing: 2px; 
-            color: white; 
-            margin-top: 8px; 
+            letter-spacing: 1.8px; 
+            color: var(--brand-charcoal); 
+            opacity: 0.8;
             display: block;
-            opacity: 0.9;
         }
 
-        .btn-container { 
-            margin: 20px 0 35px 0; 
-            position: relative; 
-            z-index: 1000; 
+        .btn-container {
+            margin: 10px 0 30px;
         }
 
         .register-btn {
             display: inline-block;
             background: var(--brand-sienna);
             color: white;
-            padding: 16px 45px;
-            border-radius: 50px;
+            padding: 15px 34px;
+            border-radius: 999px;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            border: 2px solid var(--brand-teal);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 24px rgba(167, 68, 36, 0.18);
         }
 
         .register-btn:hover { 
             background: var(--brand-teal);
-            border-color: var(--brand-green);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(75, 179, 166, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(75, 179, 166, 0.22);
+        }
+
+        .map-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-soft);
+            border-radius: 28px;
+            padding: 14px;
+            box-shadow: 0 20px 50px rgba(35, 31, 32, 0.10);
         }
 
         #map { 
-            height: 650px; 
+            height: 680px; 
             width: 100%; 
-            max-width: 1200px; 
-            margin: auto; 
-            border-radius: 30px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            background: var(--brand-charcoal); 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+            border-radius: 20px; 
+            background: #eef2f1;
         }
 
         .ping-marker {
-            background: var(--brand-green);
+            background: var(--brand-teal);
+            border: 2px solid white;
             border-radius: 50%;
-            animation: pulse-brand 2s infinite;
+            animation: pulse-brand 2.4s infinite;
+            box-shadow: 0 2px 8px rgba(35, 31, 32, 0.18);
         }
 
         @keyframes pulse-brand {
-            0% { box-shadow: 0 0 0 0 rgba(103, 193, 140, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(103, 193, 140, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(103, 193, 140, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(75, 179, 166, 0.35); }
+            70% { box-shadow: 0 0 0 12px rgba(75, 179, 166, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(75, 179, 166, 0); }
         }
 
         .leaflet-tooltip { 
-            background: var(--brand-charcoal) !important; 
-            color: white !important; 
-            border: 1px solid var(--brand-sienna) !important; 
-            border-radius: 8px; 
-            padding: 10px; 
+            background: white !important; 
+            color: var(--brand-charcoal) !important; 
+            border: 1px solid rgba(167, 68, 36, 0.22) !important; 
+            border-radius: 12px; 
+            padding: 10px 12px; 
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        
-        .leaflet-control-attribution { 
-            background: rgba(35, 31, 32, 0.8) !important; 
-            color: #888 !important; 
-            border-radius: 10px 0 0 0;
+            box-shadow: 0 8px 20px rgba(35, 31, 32, 0.12);
         }
 
-        @media (max-width: 768px) {
+        .leaflet-control-attribution { 
+            background: rgba(255, 255, 255, 0.88) !important; 
+            color: #666 !important; 
+            border-radius: 10px 0 0 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .leaflet-container {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        @media (max-width: 900px) {
             #map {
-                height: 500px;
+                height: 560px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 14px 28px;
+            }
+
+            .stat-card {
+                min-width: unset;
+                width: 100%;
             }
 
             .num {
                 font-size: 2.5rem;
             }
 
+            #map {
+                height: 480px;
+            }
+
             .register-btn {
-                padding: 14px 28px;
-                font-size: 1rem;
+                width: 100%;
+                max-width: 320px;
             }
         }
     </style>
 </head>
 <body>
-
-    <h1>ICSES 2026: Where the World’s Research Meets</h1>
-    <p>Visualizing the global impact of scientific contributions.</p>
-    
-    <div class="stats-grid">
-        <div>
-            <span class="num" id="count-abstracts">0</span>
-            <span class="label">Total Abstract Submissions</span>
+    <div class="page-wrap">
+        <h1>ICSES 2026: Where the World’s Research Meets</h1>
+        <p class="subtitle">Visualizing the global reach of scientific contributions across cities and countries around the world.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="num" id="count-abstracts">0</span>
+                <span class="label">Total Abstract Submissions</span>
+            </div>
+            <div class="stat-card">
+                <span class="num" id="count-nations">0</span>
+                <span class="label">Countries Represented</span>
+            </div>
         </div>
-        <div>
-            <span class="num" id="count-nations">0</span>
-            <span class="label">Countries Represented</span>
+
+        <div class="btn-container">
+            <a href="https://icses2026.org/registration/" target="_blank" class="register-btn">Be Part Of It, Register Now →</a>
+        </div>
+
+        <div class="map-card">
+            <div id="map"></div>
         </div>
     </div>
-
-    <div class="btn-container">
-        <a href="https://icses2026.org/registration/" target="_blank" class="register-btn">Be Part Of It, Register Now →</a>
-    </div>
-
-    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyTF3WaRtgKPHTVpnZwUPUyzMwq2_GkDu0-B0A1SvGiMZwGDGCCsu52XS-tf6Cc-LyF7VPWdkB7B43/pub?output=csv';
 
         const map = L.map('map', { 
-            center: [15, 0], 
-            zoom: 1.8, 
+            center: [20, 10], 
+            zoom: 2, 
             minZoom: 1.5, 
             maxZoom: 8, 
             zoomControl: false, 
             attributionControl: true 
         });
         
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         }).addTo(map);
 
@@ -293,7 +342,6 @@
             'Basingstoke': [51.266, -1.092],
             'Northampton': [52.240, -0.902],
             'Uxbridge': [51.548, -0.480],
-            'Warwick': [52.281, -1.584],
             'Leicester': [52.637, -1.139],
             'Brighton': [50.822, -0.137],
             'Derby': [52.922, -1.476],
@@ -322,7 +370,6 @@
             'Saint Gregoire': [48.151, -1.685],
             'Montbonnot': [45.224, 5.804],
             'Toulon': [43.124, 5.928],
-            'University of Tours': [47.394, 0.684],
 
             'Berlin': [52.52, 13.40],
             'Munich': [48.13, 11.58],
@@ -351,7 +398,6 @@
             'Winterthur': [47.498, 8.724],
             'St. Gallen': [47.424, 9.376],
             'Bruderholz': [47.520, 7.596],
-            'Meyrin': [46.233, 6.081],
             'Orthopaedic Surgery and Traumatology': [46.94, 7.44],
             'Bern University Hospital': [46.947, 7.447],
 
@@ -379,7 +425,6 @@
             'Sabadell': [41.546, 2.108],
             'Lisbon': [38.72, -9.13],
             'Porto': [41.15, -8.62],
-            'Parede - Cascais, Loures': [38.692, -9.355],
             'Rome': [41.90, 12.49],
             'Milan': [45.46, 9.18],
             'Bologna': [44.49, 11.34],
@@ -441,7 +486,6 @@
             'Obihiro': [42.924, 143.196],
             'Isehara': [35.402, 139.314],
             'Sukumo': [32.941, 132.730],
-            'Jodhpur': [26.238, 73.024],
 
             'Seoul': [37.56, 126.97],
             'Daegu': [35.87, 128.60],
@@ -484,7 +528,6 @@
             'Ahmedabad': [23.022, 72.571],
             'Hyderabad': [17.385, 78.487],
             'Coimbatore': [11.017, 76.956],
-            'Jodhpur': [26.238, 73.024],
             'Sydney': [-33.86, 151.20],
             'Melbourne': [-37.81, 144.96],
             'Brisbane': [-27.47, 153.02],
@@ -501,7 +544,6 @@
             'Waurn Ponds': [-38.198, 144.291],
             'Kogarah': [-33.965, 151.135],
             'Clayton': [-37.915, 145.130],
-            'Heidelberg Australia': [-37.756, 145.061],
 
             'Riyadh': [24.71, 46.67],
             'Abu Dhabi': [24.45, 54.37],
@@ -539,7 +581,6 @@
             'Zapopan': [20.723, -103.384],
             'Chihuahua': [28.632, -106.069],
             'Lima': [-12.046, -77.043],
-            'Quito': [-0.180, -78.467],
             'Ciudad de Quito': [-0.180, -78.467],
             'Viña del Mar': [-33.024, -71.551],
             'Iquique': [-20.230, -70.135],
@@ -585,7 +626,6 @@
                 'Funabashi Chiba': 'Funabashi',
                 'Funabashi ,Chiba': 'Funabashi',
                 'Funabashi, Chiba': 'Funabashi',
-                'Funabashi Chiba ': 'Funabashi',
                 'Shinjuku-ku, Tokyo': 'Tokyo',
                 'Hachioji, Tokyo': 'Tokyo',
                 'Aoba-ku, Sendai': 'Sendai',
@@ -593,7 +633,6 @@
                 'Kyotanabe, Kyoto': 'Kyoto',
                 'Kogarah, NSW': 'Kogarah',
                 'Ansan-si, Gyeonggi-do': 'Ansan',
-                'Gyeonggi-do': 'Gyeonggi-do',
                 'Bucheon-si, Gyeonggi-do': 'Bucheon',
                 'Pohang-si, Nam-gu': 'Pohang',
                 'Yeosu-si': 'Yeosu',
@@ -602,9 +641,7 @@
                 'Seongnam-si': 'Seongnam',
                 'Seong Nam': 'Seongnam',
                 'Sungnamsi': 'Seongnam',
-                'Seongnam': 'Seongnam',
                 'Sejong-si': 'Sejong',
-                'Ağrı': 'Ağrı',
                 'lyon': 'Lyon',
                 'LYON': 'Lyon',
                 'paris': 'Paris',
@@ -614,7 +651,6 @@
                 'durham': 'Durham',
                 'hyderabad': 'Hyderabad',
                 'khobar': 'Al Khobar',
-                'Al Khobar': 'Al Khobar',
                 'AlShuhada': 'Kuwait City',
                 'MEDELLIN': 'Medellin',
                 'ZARAGOZA': 'Zaragoza',
@@ -667,11 +703,6 @@
 
             if (aliasMap[titleCased]) return aliasMap[titleCased];
 
-            if (countryNormalized === 'canada' && titleCased === 'London') return 'London';
-            if (countryNormalized === 'united kingdom' && titleCased === 'London') return 'London';
-            if (countryNormalized === 'united states' && titleCased === 'Athens') return 'Athens';
-            if (countryNormalized === 'ireland' && titleCased === 'Dublin') return 'Dublin';
-
             return titleCased;
         }
 
@@ -706,13 +737,13 @@
                     if (hubs[city] && !processedCities.has(city)) {
                         const icon = L.divIcon({
                             className: 'ping-marker',
-                            iconSize: [10, 10]
+                            iconSize: [12, 12]
                         });
 
                         L.marker(hubs[city], { icon }).addTo(map)
                             .bindTooltip(`${city}, ${country}`, {
                                 direction: 'top',
-                                offset: [0, -5]
+                                offset: [0, -8]
                             });
 
                         processedCities.add(city);
